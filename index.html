@@ -3,64 +3,94 @@ index.html
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cronómetro RCP CUA</title>
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 30px;
-      background-color: #f5f5f5;
+      background-color: #f0f0f0;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
     }
+
     h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
       color: #b22222;
     }
-    .timer {
-      font-size: 2em;
-      margin: 10px 0;
+
+    .timer-section {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+      text-align: center;
     }
+
+    .label {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .timer {
+      font-size: 2.5rem;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+
+    .button-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 400px;
+    }
+
     button {
-      padding: 15px;
-      margin: 10px;
-      font-size: 1em;
+      padding: 20px;
+      font-size: 1.2rem;
       border: none;
-      border-radius: 8px;
-      background-color: #008080;
-      color: white;
+      border-radius: 10px;
+      color: #fff;
       cursor: pointer;
     }
-    button:hover {
-      background-color: #006666;
-    }
-    .label {
-      font-weight: bold;
-      color: #333;
-    }
+
+    .start { background-color: #007bff; }
+    .evaluate { background-color: #28a745; }
+    .cycle { background-color: #ffc107; color: #000; }
+    .stop { background-color: #dc3545; }
   </style>
 </head>
 <body>
   <h1>Cronómetro RCP CUA</h1>
 
-  <div>
-    <div class="label">Tiempo total de reanimación:</div>
+  <div class="timer-section">
+    <div class="label">Tiempo total</div>
     <div class="timer" id="mainTimer">00:00:000</div>
 
-    <div class="label">Tiempo sin compresiones:</div>
+    <div class="label">Tiempo sin compresiones</div>
     <div class="timer" id="noCompressionTimer">00:00:000</div>
 
-    <div class="label">Temporizador de 2 minutos:</div>
+    <div class="label">Ciclo de 2 minutos</div>
     <div class="timer" id="cycleTimer">02:00</div>
   </div>
 
-  <div>
-    <button onclick="startReanimation()">Iniciar Reanimación</button>
-    <button onclick="toggleEvaluation()">Iniciar/Detener Evaluación</button>
-    <button onclick="startCycle()">Iniciar Ciclo 2 Min</button>
-    <button onclick="stopReanimation()">Fin de Reanimación</button>
+  <div class="button-grid">
+    <button class="start" onclick="startReanimation()">Iniciar Reanimación</button>
+    <button class="evaluate" onclick="toggleEvaluation()">Evaluar Paciente</button>
+    <button class="cycle" onclick="startCycle()">Iniciar Ciclo 2 Min</button>
+    <button class="stop" onclick="stopReanimation()">Fin de Reanimación</button>
   </div>
 
   <audio id="alarmSound">
     <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
-    Tu navegador no soporta audio HTML5.
   </audio>
 
   <script>
@@ -144,3 +174,4 @@ index.html
   </script>
 </body>
 </html>
+
