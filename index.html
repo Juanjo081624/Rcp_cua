@@ -1,0 +1,146 @@
+index.html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cronómetro RCP CUA</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      color: #b22222;
+    }
+    .timer {
+      font-size: 2em;
+      margin: 10px 0;
+    }
+    button {
+      padding: 15px;
+      margin: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background-color: #008080;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #006666;
+    }
+    .label {
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cronómetro RCP CUA</h1>
+
+  <div>
+    <div class="label">Tiempo total de reanimación:</div>
+    <div class="timer" id="mainTimer">00:00:000</div>
+
+    <div class="label">Tiempo sin compresiones:</div>
+    <div class="timer" id="noCompressionTimer">00:00:000</div>
+
+    <div class="label">Temporizador de 2 minutos:</div>
+    <div class="timer" id="cycleTimer">02:00</div>
+  </div>
+
+  <div>
+    <button onclick="startReanimation()">Iniciar Reanimación</button>
+    <button onclick="toggleEvaluation()">Iniciar/Detener Evaluación</button>
+    <button onclick="startCycle()">Iniciar Ciclo 2 Min</button>
+    <button onclick="stopReanimation()">Fin de Reanimación</button>
+  </div>
+
+  <audio id="alarmSound">
+    <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+    Tu navegador no soporta audio HTML5.
+  </audio>
+
+  <script>
+    let mainTime = 0;
+    let noCompressionTime = 0;
+    let cycleTime = 120;
+    let mainInterval, noCompressionInterval, cycleInterval;
+    let evaluating = false;
+    let alarmTriggered = false;
+    const alarmSound = document.getElementById("alarmSound");
+
+    function formatTimeMs(milliseconds) {
+      const totalSec = Math.floor(milliseconds / 1000);
+      const minutes = String(Math.floor(totalSec / 60)).padStart(2, '0');
+      const seconds = String(totalSec % 60).padStart(2, '0');
+      const ms = String(milliseconds % 1000).padStart(3, '0');
+      return `${minutes}:${seconds}:${ms}`;
+    }
+
+    function formatTime(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateTimers() {
+      document.getElementById("mainTimer").innerText = formatTimeMs(mainTime);
+      document.getElementById("noCompressionTimer").innerText = formatTimeMs(noCompressionTime);
+      document.getElementById("cycleTimer").innerText = formatTime(cycleTime);
+    }
+
+    function startReanimation() {
+      stopReanimation();
+      mainTime = 0;
+      mainInterval = setInterval(() => {
+        mainTime += 10;
+        updateTimers();
+      }, 10);
+    }
+
+    function stopReanimation() {
+      clearInterval(mainInterval);
+      clearInterval(noCompressionInterval);
+      clearInterval(cycleInterval);
+    }
+
+    function toggleEvaluation() {
+      if (!evaluating) {
+        evaluating = true;
+        noCompressionTime = 0;
+        noCompressionInterval = setInterval(() => {
+          noCompressionTime += 10;
+          updateTimers();
+        }, 10);
+      } else {
+        evaluating = false;
+        clearInterval(noCompressionInterval);
+      }
+    }
+
+    function startCycle() {
+      clearInterval(cycleInterval);
+      cycleTime = 120;
+      alarmTriggered = false;
+      updateTimers();
+
+      cycleInterval = setInterval(() => {
+        if (cycleTime > 0) {
+          cycleTime--;
+          if (cycleTime === 30 && !alarmTriggered) {
+            alarmSound.play();
+            alarmTriggered = true;
+          }
+          updateTimers();
+        } else {
+          clearInterval(cycleInterval);
+          alert("¡Fin del ciclo de 2 minutos!");
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
