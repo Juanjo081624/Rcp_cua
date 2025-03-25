@@ -140,7 +140,6 @@ index.html
     function toggleEvaluation() {
       if (!evaluating) {
         evaluating = true;
-        noCompressionTime = 0;
         noCompressionInterval = setInterval(() => {
           noCompressionTime += 10;
           updateTimers();
@@ -167,7 +166,6 @@ index.html
           updateTimers();
         } else {
           clearInterval(cycleInterval);
-          
         }
       }, 1000);
     }
